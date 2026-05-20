@@ -1,0 +1,359 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schedule = [
+	{
+		day: 'Day 1',
+		date: 'May 25',
+		sessions: [
+			{ time: '09:00', title: 'Opening Keynote: The Future of Web', speaker: 'Jane Smith', location: 'Main Hall A', track: 'General' },
+			{ time: '10:30', title: 'Building with Astro 6', speaker: 'Alex Chen', location: 'Room 201', track: 'Web' },
+			{ time: '10:30', title: 'Intro to AI Agents', speaker: 'Maria Lopez', location: 'Room 302', track: 'AI' },
+			{ time: '13:00', title: 'TypeScript Best Practices', speaker: 'David Kim', location: 'Room 201', track: 'Web' },
+			{ time: '13:00', title: 'Cloud Native Architecture', speaker: 'Sarah Johnson', location: 'Workshop Lab', track: 'Cloud' },
+			{ time: '15:00', title: 'Panel: Open Source in 2026', speaker: 'Various', location: 'Main Hall A', track: 'General' },
+		]
+	},
+	{
+		day: 'Day 2',
+		date: 'May 26',
+		sessions: [
+			{ time: '09:00', title: 'Keynote: AI-Powered Development', speaker: 'Tom Wright', location: 'Main Hall A', track: 'AI' },
+			{ time: '10:30', title: 'React Server Components Deep Dive', speaker: 'Lisa Park', location: 'Room 201', track: 'Web' },
+			{ time: '10:30', title: 'MLOps for Teams', speaker: 'James Obi', location: 'Room 302', track: 'AI' },
+			{ time: '13:00', title: 'CSS Container Queries Workshop', speaker: 'Nina Patel', location: 'Workshop Lab', track: 'Web' },
+			{ time: '15:00', title: 'Scaling Node.js Applications', speaker: 'Chris Evans', location: 'Room 201', track: 'Cloud' },
+			{ time: '15:00', title: 'Design Systems at Scale', speaker: 'Amy Tan', location: 'Room 302', track: 'Web' },
+		]
+	},
+	{
+		day: 'Day 3',
+		date: 'May 27',
+		sessions: [
+			{ time: '09:00', title: 'Edge Computing & the Modern Web', speaker: 'Mark Davis', location: 'Main Hall A', track: 'Cloud' },
+			{ time: '10:30', title: 'Building Accessible UIs', speaker: 'Rachel Green', location: 'Room 201', track: 'Web' },
+			{ time: '13:00', title: 'Hands-on: Full-Stack with Astro', speaker: 'Alex Chen', location: 'Workshop Lab', track: 'Web' },
+			{ time: '15:00', title: 'Closing Keynote & Awards', speaker: 'Jane Smith', location: 'Main Hall A', track: 'General' },
+		]
+	}
+];
+
+const locations = [
+	{ name: 'Main Hall A', capacity: 500, floor: '1st Floor', desc: 'Main stage for keynotes and panels', icon: '01' },
+	{ name: 'Room 201', capacity: 120, floor: '2nd Floor', desc: 'Breakout sessions', icon: '02' },
+	{ name: 'Room 302', capacity: 80, floor: '3rd Floor', desc: 'Specialized talks', icon: '03' },
+	{ name: 'Workshop Lab', capacity: 40, floor: '2nd Floor', desc: 'Hands-on workshops', icon: '04' },
+];
+
+const trackConfig: Record<string, { bg: string; color: string }> = {
+	General: { bg: 'rgba(99,102,241,0.12)', color: '#818cf8' },
+	Web: { bg: 'rgba(6,182,212,0.12)', color: '#22d3ee' },
+	AI: { bg: 'rgba(192,38,211,0.12)', color: '#e879f9' },
+	Cloud: { bg: 'rgba(52,211,153,0.12)', color: '#34d399' },
+};
+---
+
+<Layout title="Schedule - TechConf 2026">
+	<div class="container">
+		<div class="page-header animate-in">
+			<h1>Conference Schedule</h1>
+			<p class="page-desc">Browse all sessions across 3 days at TechConf 2026</p>
+		</div>
+
+		<div class="filter-bar animate-in" style="animation-delay:0.1s">
+			<button class="filter-btn active" data-filter="all">All</button>
+			<button class="filter-btn" data-filter="Web" style="--fc:#22d3ee;--fb:rgba(6,182,212,0.15)">Web</button>
+			<button class="filter-btn" data-filter="AI" style="--fc:#e879f9;--fb:rgba(192,38,211,0.15)">AI</button>
+			<button class="filter-btn" data-filter="Cloud" style="--fc:#34d399;--fb:rgba(52,211,153,0.15)">Cloud</button>
+			<button class="filter-btn" data-filter="General" style="--fc:#818cf8;--fb:rgba(99,102,241,0.15)">General</button>
+		</div>
+
+		{schedule.map((day, di) => (
+			<section class="day-section animate-in" style={`animation-delay:${0.15 + di * 0.1}s`}>
+				<div class="day-header">
+					<div class="day-badge">
+						<span class="day-name">{day.day}</span>
+						<span class="day-date">{day.date}</span>
+					</div>
+					<div class="day-line"></div>
+				</div>
+				<div class="sessions-list">
+					{day.sessions.map((s) => (
+						<div class="session-card" data-track={s.track}>
+							<div class="session-time-col">
+								<span class="session-time">{s.time}</span>
+							</div>
+							<div class="session-dot-col">
+								<div class="session-dot" style={`background: ${trackConfig[s.track].color}`}></div>
+								<div class="session-line-v"></div>
+							</div>
+							<div class="session-body">
+								<div class="session-top">
+									<h3>{s.title}</h3>
+									<span class="track-badge" style={`background: ${trackConfig[s.track].bg}; color: ${trackConfig[s.track].color}`}>
+										{s.track}
+									</span>
+								</div>
+								<div class="session-meta">
+									<span class="meta-item">
+										<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 00-16 0"/></svg>
+										{s.speaker}
+									</span>
+									<span class="meta-item">
+										<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+										{s.location}
+									</span>
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+			</section>
+		))}
+
+		<section class="venues-section animate-in" style="animation-delay:0.5s">
+			<div class="section-header">
+				<h2>Venues</h2>
+				<div class="section-line"></div>
+			</div>
+			<div class="venues-grid">
+				{locations.map((loc) => (
+					<div class="venue-card card">
+						<div class="venue-num">{loc.icon}</div>
+						<div class="venue-info">
+							<h3>{loc.name}</h3>
+							<div class="venue-tags">
+								<span class="venue-tag">{loc.floor}</span>
+								<span class="venue-tag">{loc.capacity} seats</span>
+							</div>
+							<p>{loc.desc}</p>
+						</div>
+					</div>
+				))}
+			</div>
+		</section>
+	</div>
+</Layout>
+
+<style>
+	.page-header { margin-bottom: 0.5rem; }
+	.filter-bar {
+		display: flex;
+		gap: 0.4rem;
+		margin-bottom: 2.5rem;
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 0.4rem;
+		width: fit-content;
+	}
+	.filter-btn {
+		padding: 0.5rem 1.1rem;
+		border: none;
+		border-radius: var(--radius-sm);
+		background: transparent;
+		cursor: pointer;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--text-muted);
+		font-family: inherit;
+		transition: all 0.25s ease;
+	}
+	.filter-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+	.filter-btn.active {
+		background: rgba(99,102,241,0.15);
+		color: #818cf8;
+	}
+
+	/* Day sections */
+	.day-section { margin-bottom: 2.5rem; }
+	.day-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+	.day-badge {
+		display: flex;
+		align-items: baseline;
+		gap: 0.6rem;
+		white-space: nowrap;
+	}
+	.day-name {
+		font-weight: 800;
+		font-size: 1.1rem;
+		color: white;
+	}
+	.day-date {
+		font-size: 0.85rem;
+		color: var(--text-muted);
+		font-weight: 500;
+	}
+	.day-line {
+		flex: 1;
+		height: 1px;
+		background: linear-gradient(90deg, var(--border), transparent);
+	}
+
+	/* Timeline sessions */
+	.sessions-list { display: flex; flex-direction: column; }
+	.session-card {
+		display: flex;
+		gap: 0;
+		align-items: stretch;
+		transition: opacity 0.3s ease;
+	}
+	.session-time-col {
+		width: 60px;
+		flex-shrink: 0;
+		padding-top: 1.1rem;
+		text-align: right;
+		padding-right: 1rem;
+	}
+	.session-time {
+		font-size: 0.85rem;
+		font-weight: 700;
+		color: var(--text-muted);
+		font-variant-numeric: tabular-nums;
+	}
+	.session-dot-col {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 20px;
+		flex-shrink: 0;
+	}
+	.session-dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		margin-top: 1.15rem;
+		flex-shrink: 0;
+		box-shadow: 0 0 8px rgba(129,140,248,0.3);
+	}
+	.session-line-v {
+		width: 1px;
+		flex: 1;
+		background: var(--border);
+	}
+	.session-body {
+		flex: 1;
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 1.15rem 1.35rem;
+		margin: 0.35rem 0 0.35rem 1rem;
+		transition: all 0.25s ease;
+	}
+	.session-body:hover {
+		background: var(--bg-card-hover);
+		border-color: var(--border-hover);
+	}
+	.session-top {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 0.75rem;
+	}
+	.session-top h3 {
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: white;
+		line-height: 1.4;
+	}
+	.track-badge {
+		font-size: 0.7rem;
+		font-weight: 700;
+		padding: 0.2rem 0.65rem;
+		border-radius: 9999px;
+		white-space: nowrap;
+		flex-shrink: 0;
+		letter-spacing: 0.03em;
+		text-transform: uppercase;
+	}
+	.session-meta {
+		display: flex;
+		gap: 1.25rem;
+		margin-top: 0.5rem;
+		flex-wrap: wrap;
+	}
+	.meta-item {
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		font-size: 0.8rem;
+		color: var(--text-muted);
+	}
+
+	/* Venues */
+	.venues-section { margin-top: 1rem; }
+	.section-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 1.25rem;
+	}
+	.section-header h2 { margin: 0; white-space: nowrap; }
+	.section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+	.venues-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1rem;
+	}
+	.venue-card {
+		display: flex;
+		gap: 1.25rem;
+		align-items: flex-start;
+	}
+	.venue-num {
+		font-size: 1.5rem;
+		font-weight: 900;
+		color: var(--accent);
+		opacity: 0.3;
+		flex-shrink: 0;
+		line-height: 1;
+		padding-top: 0.1rem;
+	}
+	.venue-info h3 {
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: white;
+		margin-bottom: 0.35rem;
+	}
+	.venue-tags { display: flex; gap: 0.4rem; margin-bottom: 0.4rem; }
+	.venue-tag {
+		font-size: 0.7rem;
+		font-weight: 600;
+		padding: 0.15rem 0.55rem;
+		border-radius: 9999px;
+		background: rgba(255,255,255,0.06);
+		color: var(--text-muted);
+	}
+	.venue-info p { color: var(--text-dim); font-size: 0.82rem; margin: 0; }
+
+	@media (max-width: 640px) {
+		.venues-grid { grid-template-columns: 1fr; }
+		.session-time-col { width: 45px; }
+		.filter-bar { width: 100%; overflow-x: auto; }
+	}
+</style>
+
+<script>
+	document.querySelectorAll('.filter-btn').forEach(btn => {
+		btn.addEventListener('click', () => {
+			document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+			btn.classList.add('active');
+			const filter = btn.getAttribute('data-filter');
+			document.querySelectorAll('.session-card').forEach(card => {
+				const el = card as HTMLElement;
+				if (filter === 'all' || el.dataset.track === filter) {
+					el.style.opacity = '1';
+					el.style.display = '';
+				} else {
+					el.style.opacity = '0';
+					setTimeout(() => { el.style.display = 'none'; }, 200);
+				}
+			});
+		});
+	});
+</script>

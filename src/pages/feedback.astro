@@ -1,0 +1,348 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const sessions = [
+	{ id: 1, title: 'Opening Keynote: The Future of Web', speaker: 'Jane Smith' },
+	{ id: 2, title: 'Building with Astro 6', speaker: 'Alex Chen' },
+	{ id: 3, title: 'Intro to AI Agents', speaker: 'Maria Lopez' },
+	{ id: 4, title: 'TypeScript Best Practices', speaker: 'David Kim' },
+	{ id: 5, title: 'Cloud Native Architecture', speaker: 'Sarah Johnson' },
+	{ id: 6, title: 'React Server Components Deep Dive', speaker: 'Lisa Park' },
+	{ id: 7, title: 'MLOps for Teams', speaker: 'James Obi' },
+	{ id: 8, title: 'CSS Container Queries Workshop', speaker: 'Nina Patel' },
+	{ id: 9, title: 'Scaling Node.js Applications', speaker: 'Chris Evans' },
+	{ id: 10, title: 'Edge Computing & the Modern Web', speaker: 'Mark Davis' },
+	{ id: 11, title: 'Building Accessible UIs', speaker: 'Rachel Green' },
+	{ id: 12, title: 'Hands-on: Full-Stack with Astro', speaker: 'Alex Chen' },
+];
+---
+
+<Layout title="Feedback - TechConf 2026">
+	<div class="container">
+		<div class="page-header animate-in">
+			<h1>Session Feedback</h1>
+			<p class="page-desc">Rate the sessions you attended and share your thoughts</p>
+		</div>
+
+		<div class="feedback-layout">
+			<div class="form-panel animate-in" style="animation-delay:0.1s">
+				<div class="form-card">
+					<div class="form-title">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+						<h2>Submit Feedback</h2>
+					</div>
+
+					<div class="form-group">
+						<label for="session-select">Session</label>
+						<div class="select-wrap">
+							<select id="session-select">
+								<option value="">Choose a session...</option>
+								{sessions.map(s => (
+									<option value={s.id}>{s.title} - {s.speaker}</option>
+								))}
+							</select>
+							<svg class="select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>Rating</label>
+						<div class="rating-wrap">
+							<div class="stars" id="star-rating">
+								{[1,2,3,4,5].map(v => (
+									<button class="star" data-value={v}>
+										<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+									</button>
+								))}
+							</div>
+							<span id="rating-text" class="rating-label">Select a rating</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="feedback-text">Your Feedback</label>
+						<textarea id="feedback-text" rows="4" placeholder="What did you think of this session? Any suggestions?"></textarea>
+					</div>
+
+					<div class="form-group">
+						<label for="attendee-name">Name <span class="optional">(optional)</span></label>
+						<input type="text" id="attendee-name" placeholder="Anonymous" />
+					</div>
+
+					<button class="btn btn-submit" id="submit-btn">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+						Submit Feedback
+					</button>
+					<div id="submit-msg" class="submit-msg"></div>
+				</div>
+			</div>
+
+			<div class="list-panel animate-in" style="animation-delay:0.2s">
+				<div class="list-header">
+					<h2>Recent Feedback</h2>
+					<span class="feedback-count" id="feedback-count">0</span>
+				</div>
+				<div id="feedback-list"></div>
+				<div class="empty-state" id="empty-msg">
+					<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+					<p>No feedback yet</p>
+					<span>Be the first to share your thoughts!</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.feedback-layout {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2rem;
+		align-items: start;
+	}
+	.form-card {
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 2rem;
+	}
+	.form-title {
+		display: flex;
+		align-items: center;
+		gap: 0.65rem;
+		margin-bottom: 1.75rem;
+		color: var(--accent);
+	}
+	.form-title h2 { margin: 0; color: white; }
+	.form-group { margin-bottom: 1.5rem; }
+	.form-group label {
+		display: block;
+		font-weight: 600;
+		font-size: 0.85rem;
+		margin-bottom: 0.5rem;
+		color: var(--text);
+		letter-spacing: 0.01em;
+	}
+	.optional { color: var(--text-dim); font-weight: 400; }
+	.select-wrap {
+		position: relative;
+	}
+	.select-chevron {
+		position: absolute;
+		right: 14px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: var(--text-dim);
+		pointer-events: none;
+	}
+	select, input, textarea {
+		width: 100%;
+		padding: 0.7rem 1rem;
+		background: rgba(255,255,255,0.04);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-sm);
+		color: var(--text);
+		font-size: 0.9rem;
+		font-family: inherit;
+		transition: all 0.2s ease;
+		-webkit-appearance: none;
+		appearance: none;
+	}
+	select { padding-right: 2.5rem; cursor: pointer; }
+	select option { background: #1a1a2e; color: var(--text); }
+	input::placeholder, textarea::placeholder { color: var(--text-dim); }
+	select:focus, input:focus, textarea:focus {
+		outline: none;
+		border-color: var(--accent);
+		box-shadow: 0 0 0 3px var(--accent-glow);
+	}
+	textarea { resize: vertical; min-height: 100px; }
+
+	/* Stars */
+	.rating-wrap {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+	.stars { display: flex; gap: 0.15rem; }
+	.star {
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: rgba(255,255,255,0.1);
+		padding: 4px;
+		border-radius: 6px;
+		transition: all 0.2s ease;
+		line-height: 0;
+	}
+	.star:hover { transform: scale(1.2); }
+	.star.active { color: #fbbf24; filter: drop-shadow(0 0 6px rgba(251,191,36,0.4)); }
+	.rating-label {
+		font-size: 0.82rem;
+		color: var(--text-dim);
+		font-weight: 500;
+	}
+
+	.btn-submit {
+		width: 100%;
+		padding: 0.8rem;
+		font-size: 0.95rem;
+	}
+	.submit-msg {
+		margin-top: 0.75rem;
+		font-weight: 600;
+		font-size: 0.88rem;
+		text-align: center;
+		border-radius: var(--radius-sm);
+		padding: 0;
+		transition: all 0.3s;
+	}
+	.submit-msg.success {
+		color: var(--green);
+		background: rgba(52,211,153,0.08);
+		padding: 0.6rem;
+	}
+	.submit-msg.error {
+		color: var(--red);
+		background: rgba(248,113,113,0.08);
+		padding: 0.6rem;
+	}
+
+	/* List */
+	.list-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+	}
+	.list-header h2 { margin: 0; }
+	.feedback-count {
+		background: var(--accent-glow);
+		color: var(--accent);
+		font-weight: 700;
+		font-size: 0.8rem;
+		padding: 0.25rem 0.7rem;
+		border-radius: 9999px;
+	}
+	.empty-state {
+		text-align: center;
+		padding: 3rem 1rem;
+		color: var(--text-dim);
+	}
+	.empty-state svg { margin-bottom: 1rem; opacity: 0.3; }
+	.empty-state p { font-weight: 600; color: var(--text-muted); margin-bottom: 0.25rem; }
+	.empty-state span { font-size: 0.85rem; }
+
+	@media (max-width: 768px) {
+		.feedback-layout { grid-template-columns: 1fr; }
+	}
+</style>
+
+<script>
+	let currentRating = 0;
+	const ratingLabels = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+
+	const stars = document.querySelectorAll('.star');
+	const ratingText = document.getElementById('rating-text')!;
+
+	stars.forEach(star => {
+		star.addEventListener('click', () => {
+			currentRating = parseInt(star.getAttribute('data-value')!);
+			stars.forEach(s => {
+				const v = parseInt(s.getAttribute('data-value')!);
+				s.classList.toggle('active', v <= currentRating);
+			});
+			ratingText.textContent = `${ratingLabels[currentRating]} (${currentRating}/5)`;
+			ratingText.style.color = '#fbbf24';
+		});
+		star.addEventListener('mouseenter', () => {
+			const v = parseInt(star.getAttribute('data-value')!);
+			stars.forEach(s => {
+				const sv = parseInt(s.getAttribute('data-value')!);
+				if (sv <= v) s.classList.add('active');
+				else if (sv > currentRating) s.classList.remove('active');
+			});
+		});
+	});
+	document.getElementById('star-rating')!.addEventListener('mouseleave', () => {
+		stars.forEach(s => {
+			const v = parseInt(s.getAttribute('data-value')!);
+			s.classList.toggle('active', v <= currentRating);
+		});
+	});
+
+	interface Feedback {
+		session: string;
+		rating: number;
+		text: string;
+		name: string;
+		date: string;
+	}
+
+	function getFeedbacks(): Feedback[] {
+		return JSON.parse(localStorage.getItem('conf-feedbacks') || '[]');
+	}
+	function saveFeedbacks(list: Feedback[]) {
+		localStorage.setItem('conf-feedbacks', JSON.stringify(list));
+	}
+
+	function renderFeedbacks() {
+		const list = getFeedbacks();
+		const container = document.getElementById('feedback-list')!;
+		const emptyMsg = document.getElementById('empty-msg')!;
+		document.getElementById('feedback-count')!.textContent = String(list.length);
+
+		if (list.length === 0) {
+			container.innerHTML = '';
+			emptyMsg.style.display = '';
+			return;
+		}
+		emptyMsg.style.display = 'none';
+		container.innerHTML = list.slice().reverse().map(fb => `
+			<div class="fb-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:0.75rem;transition:all 0.25s">
+				<div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap">
+					<h3 style="font-size:0.9rem;font-weight:700;color:white;margin:0">${fb.session.split(' - ')[0]}</h3>
+					<span style="color:#fbbf24;font-size:0.95rem;letter-spacing:1px">${'★'.repeat(fb.rating)}${'<span style="color:rgba(255,255,255,0.1)">★</span>'.repeat(5 - fb.rating)}</span>
+				</div>
+				${fb.text ? `<p style="color:var(--text-muted);font-size:0.85rem;margin:0.5rem 0 0;line-height:1.6">${fb.text}</p>` : ''}
+				<p style="color:var(--text-dim);font-size:0.75rem;margin:0.5rem 0 0">${fb.name} &middot; ${fb.date}</p>
+			</div>
+		`).join('');
+	}
+
+	document.getElementById('submit-btn')!.addEventListener('click', () => {
+		const select = document.getElementById('session-select') as HTMLSelectElement;
+		const text = (document.getElementById('feedback-text') as HTMLTextAreaElement).value.trim();
+		const name = (document.getElementById('attendee-name') as HTMLInputElement).value.trim() || 'Anonymous';
+		const msg = document.getElementById('submit-msg')!;
+
+		if (!select.value) { msg.textContent = 'Please select a session'; msg.className = 'submit-msg error'; return; }
+		if (currentRating === 0) { msg.textContent = 'Please select a rating'; msg.className = 'submit-msg error'; return; }
+
+		const feedbacks = getFeedbacks();
+		feedbacks.push({
+			session: select.options[select.selectedIndex].text,
+			rating: currentRating,
+			text,
+			name,
+			date: new Date().toLocaleDateString(),
+		});
+		saveFeedbacks(feedbacks);
+
+		select.value = '';
+		(document.getElementById('feedback-text') as HTMLTextAreaElement).value = '';
+		(document.getElementById('attendee-name') as HTMLInputElement).value = '';
+		currentRating = 0;
+		stars.forEach(s => s.classList.remove('active'));
+		ratingText.textContent = 'Select a rating';
+		ratingText.style.color = '';
+
+		msg.textContent = 'Feedback submitted successfully!';
+		msg.className = 'submit-msg success';
+		setTimeout(() => { msg.textContent = ''; msg.className = 'submit-msg'; }, 3000);
+
+		renderFeedbacks();
+	});
+
+	renderFeedbacks();
+</script>
